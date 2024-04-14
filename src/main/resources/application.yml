@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: traffic
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/traffic
+    username: root
+    password: 12345678
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+      database-platform: org.hibernate.spatial.dialect.mysql.MySQL56InnoDBSpatialDialect
+
+# 이 값은 추후 S3연동 시 다시 수정할 예정
+#amazon:
+#  s3:
+#    bucket:
+#      name: stonecap486-bucket
+#    key:
+#      access: XX
+#      secret: XX
+#    region: XX
