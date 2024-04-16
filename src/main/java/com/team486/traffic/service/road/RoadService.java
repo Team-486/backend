@@ -15,9 +15,12 @@ import java.util.stream.Collectors;
 public class RoadService {
     private final RoadRepository roadRepository;
     private final RoadWebClientService webClientService;
-
+    
     public void showAll() {
         final List<RoadTrafficResponse> trafficResponses = webClientService.getTrafficResponses();
+
+
+
         final Map<Long, List<RoadTrafficResponse>> collect = trafficResponses.stream()
                 .collect(Collectors.groupingBy(
                         RoadTrafficResponse::id

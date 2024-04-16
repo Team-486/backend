@@ -20,7 +20,7 @@ public class RoadWebClientService {
      * AI 서버로부터 받을 도로별 혼잡도
      * 응답값을 Mocking 한 상태
      *
-     * @author  kim min-woo
+     * @author kim min-woo
      * @return List<RoadTrafficResponse>
      */
     public List<RoadTrafficResponse> getTrafficResponses() {

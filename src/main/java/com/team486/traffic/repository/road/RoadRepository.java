@@ -5,7 +5,6 @@ import com.team486.traffic.domain.road.Road;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface RoadRepository extends JpaRepository<Road, Long> {
