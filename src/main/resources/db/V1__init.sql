@@ -1,12 +1,18 @@
 create table road
 (
-    `id`                    bigint          not null primary key auto_increment,
-    `name`                  varchar(255)    not null,
-    `smooth_photo`          varchar(255),
-    `normal_photo`          varchar(255),
-    `stagnant_photo`        varchar(255),
-    `start_point_latitude`  decimal(20, 17) not null,
-    `start_point_longitude` decimal(20, 17) not null,
-    `end_point_latitude`    decimal(20, 17) not null,
-    `end_point_longitude`   decimal(20, 17) not null
+    `id`              BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `name`            VARCHAR(255) NOT NULL,
+    `start_spot_id`   BIGINT       NOT NULL,
+    `end_spot_id`     BIGINT       NOT NULL,
+    `smooth_photo`    VARCHAR(255) NOT NULL,
+    `normal_photo`    VARCHAR(255) NOT NULL,
+    `congested_photo` VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE spot
+(
+    `id`        BIGINT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `name`      VARCHAR(255)    NOT NULL,
+    `latitude`  DECIMAL(20, 17) NOT NULL,
+    `longitude` DECIMAL(20, 17) NOT NULL
 );

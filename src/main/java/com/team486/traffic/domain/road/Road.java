@@ -1,8 +1,11 @@
 package com.team486.traffic.domain.road;
 
+import com.team486.traffic.domain.spot.Spot;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 @Table(name = "road")
 public class Road {
     @Id
@@ -12,23 +15,26 @@ public class Road {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = true)    // TODO: 4/11/24 S3 사용 전까지 nullable = true 로 설정
+    @Column(nullable = false)
     @Embedded
     private Photo photo;
 
-    @AttributeOverrides({
-            @AttributeOverride(name = "latitude", column = @Column(name = "start_point_latitude")),
-            @AttributeOverride(name = "longitude", column = @Column(name = "start_point_longitude"))
-    })
-    @Column(nullable = false)
-    @Embedded
-    private Point startPoint;
+    @JoinColumn(name = "start_spot_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Spot startSpot;
 
-    @AttributeOverrides({
-            @AttributeOverride(name = "latitude", column = @Column(name = "end_point_latitude")),
-            @AttributeOverride(name = "longitude", column = @Column(name = "end_point_longitude"))
-    })
-    @Column(nullable = false)
-    @Embedded
-    private Point endPoint;
+    @JoinColumn(name = "end_spot_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Spot endSpot;
+
+    @Override
+    public String toString() {
+        return "Road{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", photo=" + photo +
+                ", startSpot=" + startSpot +
+                ", endSpot=" + endSpot +
+                '}';
+    }
 }

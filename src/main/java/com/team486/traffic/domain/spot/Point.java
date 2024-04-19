@@ -1,4 +1,4 @@
-package com.team486.traffic.domain.road;
+package com.team486.traffic.domain.spot;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

@@ -17,6 +17,6 @@ public class Photo {
     @Column(name = "normal_photo", nullable = false)
     private String normal;
 
-    @Column(name = "stagnant_photo", nullable = false)
-    private String stagnant;
+    @Column(name = "congest_photo", nullable = false)
+    private String congest;
 }
