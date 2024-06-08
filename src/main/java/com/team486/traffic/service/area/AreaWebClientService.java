@@ -1,11 +1,19 @@
 package com.team486.traffic.service.area;
 
 import com.team486.traffic.service.dto.ai.response.AiAreaTrafficResult;
+import com.team486.traffic.service.dto.ai.response.RoadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+
+import static com.team486.traffic.service.area.DirectionValue.DOWN;
+import static com.team486.traffic.service.area.DirectionValue.LEFT;
+import static com.team486.traffic.service.area.DirectionValue.RIGHT;
+import static com.team486.traffic.service.area.DirectionValue.UP;
+import static com.team486.traffic.service.dto.ai.response.AccidentType.CAR_TO_CAR;
+import static com.team486.traffic.service.dto.ai.response.AccidentType.CAR_TO_PERSON;
 
 @RequiredArgsConstructor
 @Service
@@ -21,16 +29,65 @@ public class AreaWebClientService {
      */
     public List<AiAreaTrafficResult> getAllTrafficResponse() {
         return List.of(
-                new AiAreaTrafficResult("spfA", 21, 1.6, false, null),
-                new AiAreaTrafficResult("spfB", 15, 1.3, false, null),
-                new AiAreaTrafficResult("spfC", 45, 1.2, true, "CAR_TO_CAR"),
-                new AiAreaTrafficResult("spfD", 45, 1.2, true, "CAR_TO_CAR"),
-                new AiAreaTrafficResult("spfE", 45, 1.2, true, "CAR_TO_CAR"),
-                new AiAreaTrafficResult("spfF", 45, 1.2, true, "CAR_TO_CAR")
+                new AiAreaTrafficResult("spfA", 1.6,
+                        List.of(
+                                new RoadDto(UP, 20, false, null),
+                                new RoadDto(DOWN, 20, false, null),
+                                new RoadDto(LEFT, 20, false, null),
+                                new RoadDto(RIGHT, 20, false, null)
+                        )
+                ),
+                new AiAreaTrafficResult("spfB", 1.2,
+                        List.of(
+                                new RoadDto(UP, 20, false, null),
+                                new RoadDto(DOWN, 20, false, null),
+                                new RoadDto(LEFT, 20, false, null),
+                                new RoadDto(RIGHT, 20, false, null)
+                        )
+                ),
+                new AiAreaTrafficResult("spfC", 1.2,
+                        List.of(
+                                new RoadDto(UP, 20, false, null),
+                                new RoadDto(DOWN, 20, false, null),
+                                new RoadDto(LEFT, 20, false, null),
+                                new RoadDto(RIGHT, 20, false, null)
+                        )
+                ),
+                new AiAreaTrafficResult("spfD", 1.2,
+                        List.of(
+                                new RoadDto(UP, 20, false, null),
+                                new RoadDto(DOWN, 20, false, null),
+                                new RoadDto(LEFT, 20, false, null),
+                                new RoadDto(RIGHT, 20, false, null)
+                        )
+                ),
+                new AiAreaTrafficResult("spfE", 1.2,
+                        List.of(
+                                new RoadDto(UP, 20, false, null),
+                                new RoadDto(DOWN, 20, false, null),
+                                new RoadDto(LEFT, 20, false, null),
+                                new RoadDto(RIGHT, 20, false, CAR_TO_PERSON)
+                        )
+                ),
+                new AiAreaTrafficResult("spfF", 1.2,
+                        List.of(
+                                new RoadDto(UP, 20, false, null),
+                                new RoadDto(DOWN, 20, false, null),
+                                new RoadDto(LEFT, 20, false, null),
+                                new RoadDto(RIGHT, 20, true, CAR_TO_CAR)
+                        )
+                )
         );
     }
 
     public AiAreaTrafficResult getSimpleTrafficResponse(final String aiId) {
-        return new AiAreaTrafficResult("spfA", 45, 1.2, true, "CAR_TO_CAR");
+        return new AiAreaTrafficResult("spfF", 1.2,
+                List.of(
+                        new RoadDto(UP, 20, false, null),
+                        new RoadDto(DOWN, 20, false, null),
+                        new RoadDto(LEFT, 20, false, null),
+                        new RoadDto(RIGHT, 20, true, CAR_TO_CAR)
+                )
+        );
     }
 }

@@ -1,5 +1,7 @@
 package com.team486.traffic.domain.area;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -39,15 +41,35 @@ public class Area {
     @Column(nullable = false)
     private String aiId;
 
-    @Override
-    public String toString() {
-        return "Area{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", point=" + point +
-                ", type=" + type +
-                ", videoUrl='" + videoUrl + '\'' +
-                ", aiId='" + aiId + '\'' +
-                '}';
-    }
+    @AttributeOverrides({
+            @AttributeOverride(name = "latitude", column = @Column(name = "left_lattitude", nullable = false)),
+            @AttributeOverride(name = "longitude", column = @Column(name = "left_longitude", nullable = false))
+    })
+    @Embedded
+    @Column(nullable = false)
+    private Point left;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "latitude", column = @Column(name = "right_lattitude", nullable = false)),
+            @AttributeOverride(name = "longitude", column = @Column(name = "right_longitude", nullable = false))
+    })
+    @Column(nullable = false)
+    @Embedded
+    private Point right;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "latitude", column = @Column(name = "up_lattitude", nullable = false)),
+            @AttributeOverride(name = "longitude", column = @Column(name = "up_longitude", nullable = false))
+    })
+    @Column(nullable = false)
+    @Embedded
+    private Point up;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "latitude", column = @Column(name = "down_lattitude", nullable = false)),
+            @AttributeOverride(name = "longitude", column = @Column(name = "down_longitude", nullable = false))
+    })
+    @Column(nullable = false)
+    @Embedded
+    private Point down;
 }

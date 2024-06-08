@@ -9,7 +9,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         show_sql: true
@@ -17,7 +17,7 @@ spring:
       database-platform: org.hibernate.spatial.dialect.mysql.MySQL56InnoDBSpatialDialect
   sql:
     init:
-      mode: always
+      mode: never
 # 이 값은 추후 S3연동 시 다시 수정할 예정
 #amazon:
 #  s3:
