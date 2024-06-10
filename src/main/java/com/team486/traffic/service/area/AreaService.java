@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 public class AreaService {
     private final AreaRepository areaRepository;
     private final AreaWebClientService webClientService;
+    private final VideoService videoService;
 
     public List<?> showAll(final AreaViewType type) {
         final List<AiAreaTrafficResult> aiAreaTrafficResults = getAiAreaTrafficResults(type);
@@ -38,7 +39,8 @@ public class AreaService {
     public AreaDetailResponse showDetail(final Long areaId) {
         final AreaDetailDto areaDetail = findDetailById(areaId);
         final AiAreaTrafficResult aiAreaTrafficResult = webClientService.getSimpleTrafficResponse(areaDetail.aiId());
-        return AreaDetailResponse.of(areaDetail, aiAreaTrafficResult);
+        final String videoUrl = videoService.getVideoByRoads(aiAreaTrafficResult);
+        return AreaDetailResponse.of(areaDetail, aiAreaTrafficResult, videoUrl);
     }
 
     private List<AiAreaTrafficResult> getAiAreaTrafficResults(final AreaViewType type) {

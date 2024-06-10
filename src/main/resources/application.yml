@@ -18,11 +18,10 @@ spring:
   sql:
     init:
       mode: never
-# 이 값은 추후 S3연동 시 다시 수정할 예정
 #amazon:
 #  s3:
 #    bucket:
-#      name: stonecap486-bucket
+#      name: team486-cctvvideo
 #    key:
 #      access: XX
 #      secret: XX

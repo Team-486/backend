@@ -14,7 +14,7 @@ public interface AreaRepository extends JpaRepository<Area, Long> {
             "WHERE a.aiId IN :aiIds")
     List<Area> findAllByAiIds(@Param("aiIds") final List<String> aiIds);
 
-    @Query("SELECT NEW com.team486.traffic.service.dto.inquiry.AreaDetailDto(a.name, a.aiId, a.type, a.videoUrl) " +
+    @Query("SELECT NEW com.team486.traffic.service.dto.inquiry.AreaDetailDto(a.name, a.aiId, a.type) " +
             "FROM Area a " +
             "WHERE a.id =:id")
     Optional<AreaDetailDto> findDetailById(@Param("id") final Long id);

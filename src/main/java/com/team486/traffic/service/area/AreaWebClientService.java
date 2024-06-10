@@ -18,6 +18,17 @@ import static com.team486.traffic.service.dto.ai.response.AccidentType.CAR_TO_PE
 @RequiredArgsConstructor
 @Service
 public class AreaWebClientService {
+    private static final String HOST = "";
+
+
+//    data[key] = {
+//        "congestion": spf_values[key]["congestion"],
+//        "up_dir": spf_values[key]["up_dir"],
+//        "left_dir": spf_values[key]["left_dir"],
+//        "radius": 0.2,
+//        "isAccident": accident_status[road_key]["isAccident"],
+//        "accidentType": accident_status[road_key]["accidentType"]
+//    }
     private final WebClient webClient;
 
     /**
@@ -28,6 +39,11 @@ public class AreaWebClientService {
      * @author kim min-woo
      */
     public List<AiAreaTrafficResult> getAllTrafficResponse() {
+//        webClient.get()
+//                .uri(HOST)
+//                .retrieve()
+//                .bodyToMono(AiAreaTrafficResult.class)
+//                .block();
         return List.of(
                 new AiAreaTrafficResult("spfA", 1.6,
                         List.of(

@@ -36,9 +36,6 @@ public class Area {
     private AreaType type;
 
     @Column(nullable = false)
-    private String videoUrl;
-
-    @Column(nullable = false)
     private String aiId;
 
     @AttributeOverrides({
