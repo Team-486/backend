@@ -1,34 +1,26 @@
 package com.team486.traffic.service.area;
 
+import com.team486.traffic.error.area.exception.AreaException;
 import com.team486.traffic.service.dto.ai.response.AiAreaTrafficResult;
+import com.team486.traffic.service.dto.ai.response.AreaTrafficResult;
 import com.team486.traffic.service.dto.ai.response.RoadDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static com.team486.traffic.service.area.DirectionValue.DOWN;
-import static com.team486.traffic.service.area.DirectionValue.LEFT;
-import static com.team486.traffic.service.area.DirectionValue.RIGHT;
-import static com.team486.traffic.service.area.DirectionValue.UP;
-import static com.team486.traffic.service.dto.ai.response.AccidentType.CAR_TO_CAR;
-import static com.team486.traffic.service.dto.ai.response.AccidentType.CAR_TO_PERSON;
+import static com.team486.traffic.error.area.code.AreaErrorCode.NOT_FOUND;
 
 @RequiredArgsConstructor
 @Service
 public class AreaWebClientService {
-    private static final String HOST = "";
+    private static final Map<String, Map<DirectionValue, RoadDto>> mockingMap = new HashMap<>();
+    private static final String AREA_INFO_URI = "http://3.34.154.250:5000/get_spf";
 
-
-//    data[key] = {
-//        "congestion": spf_values[key]["congestion"],
-//        "up_dir": spf_values[key]["up_dir"],
-//        "left_dir": spf_values[key]["left_dir"],
-//        "radius": 0.2,
-//        "isAccident": accident_status[road_key]["isAccident"],
-//        "accidentType": accident_status[road_key]["accidentType"]
-//    }
     private final WebClient webClient;
 
     /**
@@ -38,72 +30,28 @@ public class AreaWebClientService {
      * @return List<AreaDto>
      * @author kim min-woo
      */
-    public List<AiAreaTrafficResult> getAllTrafficResponse() {
-//        webClient.get()
-//                .uri(HOST)
-//                .retrieve()
-//                .bodyToMono(AiAreaTrafficResult.class)
-//                .block();
-        return List.of(
-                new AiAreaTrafficResult("spfA", 1.6,
-                        List.of(
-                                new RoadDto(UP, 20, false, null),
-                                new RoadDto(DOWN, 20, false, null),
-                                new RoadDto(LEFT, 20, false, null),
-                                new RoadDto(RIGHT, 20, false, null)
-                        )
-                ),
-                new AiAreaTrafficResult("spfB", 1.2,
-                        List.of(
-                                new RoadDto(UP, 20, false, null),
-                                new RoadDto(DOWN, 20, false, null),
-                                new RoadDto(LEFT, 20, false, null),
-                                new RoadDto(RIGHT, 20, false, null)
-                        )
-                ),
-                new AiAreaTrafficResult("spfC", 1.2,
-                        List.of(
-                                new RoadDto(UP, 20, false, null),
-                                new RoadDto(DOWN, 20, false, null),
-                                new RoadDto(LEFT, 20, false, null),
-                                new RoadDto(RIGHT, 20, false, null)
-                        )
-                ),
-                new AiAreaTrafficResult("spfD", 1.2,
-                        List.of(
-                                new RoadDto(UP, 20, false, null),
-                                new RoadDto(DOWN, 20, false, null),
-                                new RoadDto(LEFT, 20, false, null),
-                                new RoadDto(RIGHT, 20, false, null)
-                        )
-                ),
-                new AiAreaTrafficResult("spfE", 1.2,
-                        List.of(
-                                new RoadDto(UP, 20, false, null),
-                                new RoadDto(DOWN, 20, false, null),
-                                new RoadDto(LEFT, 20, false, null),
-                                new RoadDto(RIGHT, 20, false, CAR_TO_PERSON)
-                        )
-                ),
-                new AiAreaTrafficResult("spfF", 1.2,
-                        List.of(
-                                new RoadDto(UP, 20, false, null),
-                                new RoadDto(DOWN, 20, false, null),
-                                new RoadDto(LEFT, 20, false, null),
-                                new RoadDto(RIGHT, 20, true, CAR_TO_CAR)
-                        )
-                )
-        );
+    public List<AreaTrafficResult> getAllTrafficResponse() {
+        final List<AiAreaTrafficResult> results = getAiAreaTrafficResults();
+        return results.stream()
+                .map(AreaTrafficResult::from)
+                .toList();
     }
 
-    public AiAreaTrafficResult getSimpleTrafficResponse(final String aiId) {
-        return new AiAreaTrafficResult("spfF", 1.2,
-                List.of(
-                        new RoadDto(UP, 20, false, null),
-                        new RoadDto(DOWN, 20, false, null),
-                        new RoadDto(LEFT, 20, false, null),
-                        new RoadDto(RIGHT, 20, true, CAR_TO_CAR)
-                )
-        );
+    public AreaTrafficResult getSimpleTrafficResponse(final String aiId) {
+        final List<AiAreaTrafficResult> aiAreaTrafficResults = getAiAreaTrafficResults();
+        return aiAreaTrafficResults.stream()
+                .filter(aiAreaTrafficResult -> aiAreaTrafficResult.id().equals(aiId))
+                .findAny()
+                .map(AreaTrafficResult::from)
+                .orElseThrow(() -> new AreaException(NOT_FOUND));
+    }
+
+    private List<AiAreaTrafficResult> getAiAreaTrafficResults() {
+        return webClient.get()
+                .uri(AREA_INFO_URI)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<AiAreaTrafficResult>>() {
+                })
+                .block();
     }
 }

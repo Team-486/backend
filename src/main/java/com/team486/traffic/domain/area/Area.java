@@ -1,5 +1,6 @@
 package com.team486.traffic.domain.area;
 
+import com.team486.traffic.service.area.DirectionValue;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
@@ -69,4 +70,18 @@ public class Area {
     @Column(nullable = false)
     @Embedded
     private Point down;
+
+    public Point getPointByDirection(final DirectionValue directionValue) {
+        if (directionValue.equals(DirectionValue.UP)) {
+            return up;
+        } else if (directionValue.equals(DirectionValue.DOWN)) {
+            return down;
+        } else if (directionValue.equals(DirectionValue.LEFT)) {
+            return left;
+        } else if (directionValue.equals(DirectionValue.RIGHT)) {
+            return right;
+        }
+
+        throw new IllegalArgumentException();
+    }
 }

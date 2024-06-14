@@ -3,8 +3,7 @@ package com.team486.traffic.service.area;
 import com.team486.traffic.controller.area.AreaViewType;
 import com.team486.traffic.domain.area.Area;
 import com.team486.traffic.repository.area.AreaRepository;
-import com.team486.traffic.service.dto.ai.response.AiAreaTrafficResult;
-import com.team486.traffic.service.dto.ai.response.RoadDto;
+import com.team486.traffic.service.dto.ai.response.AreaTrafficResult;
 import com.team486.traffic.service.dto.inquiry.AreaDetailDto;
 import com.team486.traffic.service.dto.inquiry.response.AreaAccidentResponse;
 import com.team486.traffic.service.dto.inquiry.response.AreaCongestionResponse;
@@ -27,10 +26,10 @@ public class AreaService {
     private final VideoService videoService;
 
     public List<?> showAll(final AreaViewType type) {
-        final List<AiAreaTrafficResult> aiAreaTrafficResults = getAiAreaTrafficResults(type);
-        final List<String> names = extractedAiIds(aiAreaTrafficResults);
+        final List<AreaTrafficResult> areaTrafficResults = getAiAreaTrafficResults(type);
+        final List<String> names = extractedAiIds(areaTrafficResults);
         final List<Area> areas = areaRepository.findAllByAiIds(names);
-        final Map<String, AiAreaTrafficResult> resultGroupByAiId = extractedGroupByAiId(aiAreaTrafficResults);
+        final Map<String, AreaTrafficResult> resultGroupByAiId = extractedGroupByAiId(areaTrafficResults);
         return areas.stream()
                 .map(getMapper(type, resultGroupByAiId))
                 .toList();
@@ -38,29 +37,23 @@ public class AreaService {
 
     public AreaDetailResponse showDetail(final Long areaId) {
         final AreaDetailDto areaDetail = findDetailById(areaId);
-        final AiAreaTrafficResult aiAreaTrafficResult = webClientService.getSimpleTrafficResponse(areaDetail.aiId());
-        final String videoUrl = videoService.getVideoByRoads(aiAreaTrafficResult);
-        return AreaDetailResponse.of(areaDetail, aiAreaTrafficResult, videoUrl);
+        final AreaTrafficResult areaTrafficResult = webClientService.getSimpleTrafficResponse(areaDetail.aiId());
+        final String videoUrl = videoService.getVideoByRoads(areaTrafficResult);
+        return AreaDetailResponse.of(areaDetail, areaTrafficResult, videoUrl);
     }
 
-    private List<AiAreaTrafficResult> getAiAreaTrafficResults(final AreaViewType type) {
-        List<AiAreaTrafficResult> aiAreaTrafficResults = webClientService.getAllTrafficResponse();
+    private List<AreaTrafficResult> getAiAreaTrafficResults(final AreaViewType type) {
+        List<AreaTrafficResult> areaTrafficResults = webClientService.getAllTrafficResponse();
         if (type.equals(AreaViewType.ACCIDENT)) {
-            return aiAreaTrafficResults.stream()
-                    .filter(this::isAccident)
+            return areaTrafficResults.stream()
+                    .filter(AreaTrafficResult::isAccident)
                     .toList();
         }
-        return aiAreaTrafficResults;
-    }
-
-    private boolean isAccident(final AiAreaTrafficResult aiAreaTrafficResult) {
-        return aiAreaTrafficResult.roads()
-                .stream()
-                .anyMatch(RoadDto::isAccident);
+        return areaTrafficResults;
     }
 
     private Function<Area, ?> getMapper(final AreaViewType type,
-                                        final Map<String, AiAreaTrafficResult> resultGroupByAiId) {
+                                        final Map<String, AreaTrafficResult> resultGroupByAiId) {
         if (type.equals(AreaViewType.CONGESTION)) {
             return area -> AreaCongestionResponse.of(area, resultGroupByAiId.get(area.getAiId()));
         }
@@ -68,15 +61,15 @@ public class AreaService {
         return area -> AreaAccidentResponse.of(area, resultGroupByAiId.get(area.getAiId()));
     }
 
-    private List<String> extractedAiIds(final List<AiAreaTrafficResult> aiAreaTrafficResults) {
-        return aiAreaTrafficResults.stream()
-                .map(AiAreaTrafficResult::aiId)
+    private List<String> extractedAiIds(final List<AreaTrafficResult> areaTrafficResults) {
+        return areaTrafficResults.stream()
+                .map(AreaTrafficResult::id)
                 .toList();
     }
 
-    private Map<String, AiAreaTrafficResult> extractedGroupByAiId(final List<AiAreaTrafficResult> aiAreaTrafficResults) {
-        return aiAreaTrafficResults.stream()
-                .collect(Collectors.toMap(AiAreaTrafficResult::aiId, aiAreaTrafficResult -> aiAreaTrafficResult));
+    private Map<String, AreaTrafficResult> extractedGroupByAiId(final List<AreaTrafficResult> areaTrafficResults) {
+        return areaTrafficResults.stream()
+                .collect(Collectors.toMap(AreaTrafficResult::id, aiAreaTrafficResult -> aiAreaTrafficResult));
     }
 
     private AreaDetailDto findDetailById(final Long areaId) {

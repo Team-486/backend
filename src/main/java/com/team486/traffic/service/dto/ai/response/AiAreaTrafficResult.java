@@ -1,8 +1,8 @@
 package com.team486.traffic.service.dto.ai.response;
 
-import java.util.List;
-
-public record AiAreaTrafficResult(String aiId,
+public record AiAreaTrafficResult(String id,
                                   Double radius,
-                                  List<RoadDto> roads) {
+                                  Double congestion,
+                                  Boolean isAccident,
+                                  AccidentType accidentType) {
 }

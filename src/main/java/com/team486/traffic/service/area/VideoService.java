@@ -1,8 +1,8 @@
 package com.team486.traffic.service.area;
 
 import com.team486.traffic.service.dto.ai.response.AccidentType;
-import com.team486.traffic.service.dto.ai.response.AiAreaTrafficResult;
-import com.team486.traffic.service.dto.ai.response.RoadDto;
+import com.team486.traffic.service.dto.ai.response.AreaTrafficResult;
+import com.team486.traffic.service.dto.video.request.AiVideoRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -26,31 +26,32 @@ public class VideoService {
         videos.put("crash4", "https://team486-cctvvideo.s3.ap-northeast-2.amazonaws.com/crash4.mp4");
     }
 
-    public String getVideoByRoads(final AiAreaTrafficResult aiAreaTrafficResult) {
-        final List<RoadDto> roads = aiAreaTrafficResult.roads();
-        if (isAccident(roads)) {
-            final AccidentType accidentType = getAccidentType(roads);
+    public AiVideoRequest getVideoRequest() {
+        return new AiVideoRequest(getVideos());
+    }
+
+    public String getVideoByRoads(final AreaTrafficResult areaTrafficResult) {
+        if (areaTrafficResult.isAccident()) {
+            final AccidentType accidentType = areaTrafficResult.accidentType();
             return getVideoByAccidentType(accidentType);
         }
 
-        final String aiId = aiAreaTrafficResult.aiId();
+        final String aiId = areaTrafficResult.id();
         return getVideoByAiId(aiId);
     }
 
-    private boolean isAccident(final List<RoadDto> roads) {
-        return roads.stream()
-                .anyMatch(RoadDto::isAccident);
+    private List<String> getVideos() {
+        return List.of(
+                videos.get("spfA"),
+                videos.get("spfB"),
+                videos.get("spfC"),
+                videos.get("spfD"),
+                videos.get("spfE"),
+                videos.get("spfF")
+        );
     }
 
-    private AccidentType getAccidentType(final List<RoadDto> roads) {
-        return roads.stream()
-                .filter(RoadDto::isAccident)
-                .findAny()
-                .map(RoadDto::accidentType)
-                .get();
-    }
-
-    private final  String getVideoByAiId(final String aiId) {
+    private String getVideoByAiId(final String aiId) {
         return videos.get(aiId);
     }
 
