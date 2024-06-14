@@ -20,9 +20,9 @@ public record AreaTrafficResult(String id,
                     aiAreaTrafficResult.accidentType(),
                     Map.of(
                             DirectionValue.LEFT, congestion + 5,
-                            DirectionValue.RIGHT, congestion - 5,
+                            DirectionValue.RIGHT, Math.max(congestion - 5, 0),
                             DirectionValue.UP, congestion + 5,
-                            DirectionValue.DOWN, congestion - 5
+                            DirectionValue.DOWN, Math.max(congestion - 5, 0)
                     )
             );
         }
@@ -37,7 +37,7 @@ public record AreaTrafficResult(String id,
                             DirectionValue.LEFT, congestion,
                             DirectionValue.RIGHT, congestion,
                             DirectionValue.UP, congestion + 1,
-                            DirectionValue.DOWN, congestion - 1
+                            DirectionValue.DOWN, Math.max(congestion - 1, 0)
                     )
             );
         }
@@ -52,7 +52,7 @@ public record AreaTrafficResult(String id,
                             DirectionValue.LEFT, 0.,
                             DirectionValue.RIGHT, 0.,
                             DirectionValue.UP, congestion + 5,
-                            DirectionValue.DOWN, congestion - 5
+                            DirectionValue.DOWN, Math.max(congestion - 5, 0)
                     )
             );
         }
